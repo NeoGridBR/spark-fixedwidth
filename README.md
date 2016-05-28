@@ -19,7 +19,7 @@ Add the JAR to your project lib and sbt will include it for you
 This package allows reading fixed-width files in local or distributed filesystem as [Spark DataFrames](https://spark.apache.org/docs/1.3.0/sql-programming-guide.html).
 When reading files the API accepts several options:
 * `path` (REQUIRED): location of files. Similar to Spark can accept standard Hadoop globbing expressions.
-* `fixedWidths` (REQUIRED): Int array of the fixed widths of the source file(s)
+* `fixedWidths`: Int array of the fixed widths of the source file(s). If null, the default vector is extracted from metadata of schema.
 * `schema`: in [spark SQL form](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.types.StructType). Otherwise everything is assumed String (unless inferSchema is on)
 * `useHeader`: when set to true the first line of files will be used to name columns and will not be included in data. All types will be assumed string. Default value is true.
 * `charset`: defaults to 'UTF-8' but can be set to other valid charset names
