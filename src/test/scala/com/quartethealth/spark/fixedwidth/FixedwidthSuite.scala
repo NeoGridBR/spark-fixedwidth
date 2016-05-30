@@ -1,8 +1,9 @@
 package com.quartethealth.spark.fixedwidth
 
-import org.apache.spark.{SparkContext, SparkException}
-import org.apache.spark.sql.types.{DoubleType, IntegerType, StringType, StructField, StructType}
+import com.sun.javaws.exceptions.InvalidArgumentException
+import org.apache.spark.sql.types._
 import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.{SparkContext, SparkException}
 import org.specs2.mutable.Specification
 import org.specs2.specification.After
 
@@ -20,6 +21,18 @@ trait FixedwidthSetup extends After {
     StructField("name", StringType),
     StructField("avail", StringType),
     StructField("cost", DoubleType)
+  ))
+  protected val fruitSchemaWithMetadata = StructType(Seq(
+    StructField("val", IntegerType, true, Metadata.fromJson("{\"position\":3}")),
+    StructField("name", StringType, true, Metadata.fromJson("{\"position\":10}")),
+    StructField("avail", StringType, true, Metadata.fromJson("{\"position\":5}")),
+    StructField("cost", DoubleType, true, Metadata.fromJson("{\"position\":4}"))
+  ))
+  protected val fruitSchemaWithInvalidPositionMetadata = StructType(Seq(
+    StructField("val", IntegerType, true, Metadata.fromJson("{\"position\":3}")),
+    StructField("name", StringType, true, Metadata.empty),
+    StructField("avail", StringType, true, Metadata.fromJson("{\"position\":5}")),
+    StructField("cost", DoubleType, true, Metadata.fromJson("{\"position\":4}"))
   ))
 
   val sqlContext: SQLContext = new SQLContext(new SparkContext("local[2]", "FixedwidthSuite"))
@@ -98,7 +111,14 @@ class FixedwidthSpec extends Specification with FixedwidthSetup {
       val result = sqlContext.fixedFile(fruit_resource("malformed"), fruitWidths,
         useHeader = false, mode = "DROPMALFORMED")
       result.show()
-     result.collect().length mustEqual malformedFruitSize
+      result.collect().length mustEqual malformedFruitSize
+    }
+
+    "Parse with position defined in structfield metadata" in {
+      val result = sqlContext.fixedFileDefinedBySchema(fruit_resource(), fruitSchemaWithMetadata,
+        useHeader = false)
+      result.show()
+      sanityChecks(result)
     }
 
     "FAIL to parse a malformed fw file with schema in FAILFAST mode" in {
@@ -113,6 +133,13 @@ class FixedwidthSpec extends Specification with FixedwidthSetup {
       def fail = {
         sqlContext.fixedFile(fruit_resource("wrong_schema"), fruitWidths,
           fruitSchema, useHeader = false).collect()
+      }
+      fail must throwA[SparkException]
+    }
+
+    "FAIL to parse a fw file with invalid position contained on schema" in {
+      def fail = {
+        sqlContext.fixedFileDefinedBySchema(fruit_resource(), fruitSchemaWithInvalidPositionMetadata, useHeader = false).collect()
       }
       fail must throwA[SparkException]
     }
