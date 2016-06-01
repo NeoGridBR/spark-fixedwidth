@@ -1,8 +1,9 @@
 package com.quartethealth.spark.fixedwidth
 
-import com.databricks.spark.csv.CsvRelation
-import com.databricks.spark.csv.readers.{BulkReader, LineReader}
-import com.quartethealth.spark.fixedwidth.readers.{BulkFixedwidthReader, LineFixedwidthReader}
+
+import com.quartethealth.spark.csv.CsvRelation
+import com.quartethealth.spark.fixedwidth.readers._
+import com.quartethealth.spark.csv.readers._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.types.StructType
@@ -29,8 +30,8 @@ class FixedwidthRelation protected[spark] (
     quote = null,
     escape = null,
     comment = comment,
-    parseMode = parseMode,
     parserLib = "UNIVOCITY",
+    parseMode = parseMode,
     ignoreLeadingWhiteSpace = ignoreLeadingWhiteSpace,
     ignoreTrailingWhiteSpace = ignoreTrailingWhiteSpace,
     treatEmptyValuesAsNulls = treatEmptyValuesAsNulls,

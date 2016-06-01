@@ -1,6 +1,6 @@
 package com.quartethealth.spark.fixedwidth.readers
 
-import com.databricks.spark.csv.readers.{BulkReader, LineReader}
+import com.quartethealth.spark.csv.readers.{BulkReader, LineReader}
 import com.univocity.parsers.fixed.{FixedWidthFieldLengths, FixedWidthParser, FixedWidthParserSettings}
 
 /**
@@ -35,6 +35,7 @@ private[readers] abstract class FixedwidthReader(
     settings.setInputBufferSize(inputBufSize)
     settings.setMaxColumns(maxCols)
     settings.setNullValue("")
+
     settings.setMaxCharsPerColumn(100000)
     if (headers != null) settings.setHeaders(headers: _*)
     // TODO: configurable?

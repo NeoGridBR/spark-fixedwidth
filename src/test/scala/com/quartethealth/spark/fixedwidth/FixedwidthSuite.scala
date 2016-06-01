@@ -1,6 +1,5 @@
 package com.quartethealth.spark.fixedwidth
 
-import com.sun.javaws.exceptions.InvalidArgumentException
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.apache.spark.{SparkContext, SparkException}
@@ -52,6 +51,7 @@ class FixedwidthSpec extends Specification with FixedwidthSetup {
   }
 
   "FixedwidthParser" should {
+
     "Parse a basic fixed width file, successfully" in {
       val result = sqlContext.fixedFile(fruit_resource(), fruitWidths, fruitSchema,
         useHeader = false)
@@ -117,7 +117,6 @@ class FixedwidthSpec extends Specification with FixedwidthSetup {
     "Parse with position defined in structfield metadata" in {
       val result = sqlContext.fixedFileDefinedBySchema(fruit_resource(), fruitSchemaWithMetadata,
         useHeader = false)
-      result.show()
       sanityChecks(result)
     }
 
