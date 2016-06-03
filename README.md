@@ -76,3 +76,9 @@ val result = sqlContext.fixedFile(
 )
 result.collect() // Returns an array that contains all of Rows in this DataFrame
 ```
+
+## Metadatas
+| Metadata      | Description                                                                                   | Example                                                                                                            |
+|---------------|-----------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| position      | Final position column of the field. This property considers the order of the declared fields. | line with content 20150202AB  1º field, position 8 = 20150202 2º field, position 2(see the declaration order) = AB |
+| decimalDigits | Decimal digits of the field.                                                                  | 00002063 with metadata {"decimalDigits":2} = 000020.63                                                             |
