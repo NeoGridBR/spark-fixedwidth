@@ -26,8 +26,8 @@ class MetadataFieldsSuite extends Specification {
 
     "Should retrieve position array if position is defined in metadata" in {
       val schema = StructType(Seq(
-        StructField("aField", DoubleType, true, Metadata.fromJson("{\"position\":2}")),
-        StructField("bField", StringType, true, Metadata.fromJson("{\"position\":7}"))
+        StructField("aField", DoubleType, true, Metadata.fromJson("{\"width\":2}")),
+        StructField("bField", StringType, true, Metadata.fromJson("{\"width\":7}"))
       ))
       val positionArray = MetadataFields.getFixedWidthPositionsFromMetadata(schema)
       positionArray mustEqual Array[Int](2,7)

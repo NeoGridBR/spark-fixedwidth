@@ -8,16 +8,17 @@ package object fixedwidth {
 
   implicit class FixedwidthContext(sqlContext: SQLContext) extends Serializable {
 
-    def fixedFile( filePath: String,
-                   fixedWidths: Array[Int],
-                   schema: StructType = null,
-                   useHeader: Boolean = true,
-                   mode: String = "PERMISSIVE",
-                   comment: Character = null,
-                   ignoreLeadingWhiteSpace: Boolean = true,
-                   ignoreTrailingWhiteSpace: Boolean = true,
-                   charset: String = TextFile.DEFAULT_CHARSET.name(),
-                   inferSchema: Boolean = false): DataFrame = {
+    def fixedFile(filePath: String,
+                  fixedWidths: Array[Int],
+                  schema: StructType = null,
+                  useHeader: Boolean = true,
+                  mode: String = "PERMISSIVE",
+                  comment: Character = null,
+                  ignoreLeadingWhiteSpace: Boolean = true,
+                  ignoreTrailingWhiteSpace: Boolean = true,
+                  charset: String = TextFile.DEFAULT_CHARSET.name(),
+                  inferSchema: Boolean = false,
+                  treatEmptyValuesAsNulls: Boolean = false): DataFrame = {
 
       val fixedwidthRelation = new FixedwidthRelation(
         () => TextFile.withCharset(sqlContext.sparkContext, filePath, charset),
@@ -30,7 +31,7 @@ package object fixedwidth {
         ignoreTrailingWhiteSpace = ignoreTrailingWhiteSpace,
         userSchema = schema,
         inferSchema = inferSchema,
-        treatEmptyValuesAsNulls = false)(sqlContext)
+        treatEmptyValuesAsNulls = treatEmptyValuesAsNulls)(sqlContext)
 
       sqlContext.baseRelationToDataFrame(fixedwidthRelation)
     }
@@ -48,11 +49,12 @@ package object fixedwidth {
                                  ignoreLeadingWhiteSpace: Boolean = true,
                                  ignoreTrailingWhiteSpace: Boolean = true,
                                  charset: String = TextFile.DEFAULT_CHARSET.name(),
-                                 inferSchema: Boolean = false): DataFrame = {
+                                 inferSchema: Boolean = false,
+                                 treatEmptyValuesAsNulls: Boolean = false): DataFrame = {
 
       val positionArray = MetadataFields.getFixedWidthPositionsFromMetadata(schema)
       fixedFile(filePath, positionArray, schema, useHeader, mode, comment, ignoreLeadingWhiteSpace,
-        ignoreTrailingWhiteSpace, charset, inferSchema)
+        ignoreTrailingWhiteSpace, charset, inferSchema, treatEmptyValuesAsNulls)
     }
   }
 

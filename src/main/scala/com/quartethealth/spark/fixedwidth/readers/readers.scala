@@ -21,6 +21,7 @@ private[readers] abstract class FixedwidthReader(
     commentMarker: Char = '#',
     ignoreLeadingSpace: Boolean = true,
     ignoreTrailingSpace: Boolean = true,
+    treatEmptyValuesAsNulls: Boolean = true,
     headers: Seq[String],
     inputBufSize: Int = 128,
     maxCols: Int = 20480) {
@@ -34,7 +35,9 @@ private[readers] abstract class FixedwidthReader(
     settings.setReadInputOnSeparateThread(false)
     settings.setInputBufferSize(inputBufSize)
     settings.setMaxColumns(maxCols)
-    settings.setNullValue("")
+    if (!treatEmptyValuesAsNulls){
+      settings.setNullValue("")
+    }
 
     settings.setMaxCharsPerColumn(100000)
     if (headers != null) settings.setHeaders(headers: _*)
@@ -63,13 +66,15 @@ private[fixedwidth] class LineFixedwidthReader(
     ignoreLeadingSpace: Boolean = true,
     ignoreTrailingSpace: Boolean = true,
     inputBufSize: Int = 128,
-    maxCols: Int = 20480)
+    maxCols: Int = 20480,
+    treatEmptyValuesAsNulls: Boolean = true)
   extends FixedwidthReader(
     fixedWidths,
     lineSep,
     commentMarker,
     ignoreLeadingSpace,
     ignoreTrailingSpace,
+    treatEmptyValuesAsNulls,
     null,
     inputBufSize,
     maxCols)
@@ -109,13 +114,15 @@ private[fixedwidth] class BulkFixedwidthReader(
     ignoreTrailingSpace: Boolean = true,
     headers: Seq[String],
     inputBufSize: Int = 128,
-    maxCols: Int = 20480)
+    maxCols: Int = 20480,
+    treatEmptyValuesAsNulls: Boolean = true)
   extends FixedwidthReader(
     fixedWidths,
     lineSep,
     commentMarker,
     ignoreLeadingSpace,
     ignoreTrailingSpace,
+    treatEmptyValuesAsNulls,
     headers,
     inputBufSize,
     maxCols

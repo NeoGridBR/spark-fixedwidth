@@ -1,0 +1,7 @@
+56 apple     TRUE 0056
+45 pear      FALSE1340
+34 raspberry TRUE 2430
+34 plum      TRUE 1310
+53 cherry    TRUE 1400
+23 orange    FALSE0025
+56 persimmon FALSE2320

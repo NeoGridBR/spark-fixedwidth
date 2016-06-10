@@ -4,6 +4,8 @@ version := "1.0"
 
 organization := "com.quartethealth"
 
+publishTo := Some("Artifactory Realm" at "http://repo.neogrid.com/libs-sbt-release")
+
 scalaVersion := "2.10.6"
 
 libraryDependencies ++= Seq(

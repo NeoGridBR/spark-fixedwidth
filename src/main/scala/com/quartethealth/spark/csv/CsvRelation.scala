@@ -183,8 +183,9 @@ case class CsvRelation protected[spark] (
             while (subIndex < safeRequiredIndices.length) {
               index = safeRequiredIndices(subIndex)
               val field = schemaFields(index)
+              val formatedValue = MetadataFields.formatTokenBasedOnMetadata(indexSafeTokens(index), field)
               rowArray(subIndex) = TypeCast.castTo(
-                indexSafeTokens(index),
+                formatedValue,
                 field.dataType,
                 field.nullable,
                 treatEmptyValuesAsNulls,

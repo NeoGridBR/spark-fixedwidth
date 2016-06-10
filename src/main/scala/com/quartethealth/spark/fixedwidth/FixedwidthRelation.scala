@@ -43,7 +43,8 @@ class FixedwidthRelation protected[spark] (
     val commentChar: Char = if (comment == null) '\0' else comment
     new LineFixedwidthReader(fixedWidths, commentMarker = commentChar,
       ignoreLeadingSpace = ignoreLeadingWhiteSpace,
-      ignoreTrailingSpace = ignoreTrailingWhiteSpace)
+      ignoreTrailingSpace = ignoreTrailingWhiteSpace,
+      treatEmptyValuesAsNulls=treatEmptyValuesAsNulls)
   }
 
   protected override def getBulkReader(header: Seq[String], iter: Iterator[String],
@@ -52,6 +53,7 @@ class FixedwidthRelation protected[spark] (
     new BulkFixedwidthReader(iter, split, fixedWidths,
       headers = header, commentMarker = commentChar,
       ignoreLeadingSpace = ignoreLeadingWhiteSpace,
-      ignoreTrailingSpace = ignoreTrailingWhiteSpace)
+      ignoreTrailingSpace = ignoreTrailingWhiteSpace,
+      treatEmptyValuesAsNulls=treatEmptyValuesAsNulls)
   }
 }

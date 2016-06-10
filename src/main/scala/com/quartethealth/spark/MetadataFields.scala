@@ -8,20 +8,20 @@ import org.apache.spark.sql.types.{StructField, StructType, _}
   */
 object MetadataFields {
 
-  private val PositionKey = "position"
+  private val PositionKey = "width"
   private val DecimalDigitsKey = "decimalDigits"
 
   /**
     * Insert decimal separator in raw value of token.
     * Example: 001052 to 0010.52 with 2 decimal digits
-    * */
+    **/
   private def formatDecimalDigits(token: String, decimalDigits: Int): String = {
-    val (integer,decimal) = token.splitAt(token.length - decimalDigits)
+    val (integer, decimal) = token.splitAt(token.length - decimalDigits)
     integer + '.' + decimal
   }
 
   /**
-    * Format token applying the metadata from field
+    * Format token applying the metadata properties
     *
     * @param field - Field that contain metadata
     * @param token - Token to formatting based on metadata
@@ -31,9 +31,9 @@ object MetadataFields {
   def formatTokenBasedOnMetadata(token: String, field: StructField): String = {
     field.dataType match {
       case FloatType | DoubleType => {
-        if (field.metadata.contains(DecimalDigitsKey)) {
+        if (field.metadata.contains(DecimalDigitsKey))
           formatDecimalDigits(token, field.metadata.getLong(DecimalDigitsKey).toInt)
-        } else token
+        else token
       }
       case _ => token
     }

@@ -22,16 +22,24 @@ trait FixedwidthSetup extends After {
     StructField("cost", DoubleType)
   ))
   protected val fruitSchemaWithMetadata = StructType(Seq(
-    StructField("val", IntegerType, true, Metadata.fromJson("{\"position\":3}")),
-    StructField("name", StringType, true, Metadata.fromJson("{\"position\":10}")),
-    StructField("avail", StringType, true, Metadata.fromJson("{\"position\":5}")),
-    StructField("cost", DoubleType, true, Metadata.fromJson("{\"position\":4}"))
+    StructField("val", IntegerType, true, Metadata.fromJson("{\"width\":3}")),
+    StructField("name", StringType, true, Metadata.fromJson("{\"width\":10}")),
+    StructField("avail", StringType, true, Metadata.fromJson("{\"width\":5}")),
+    StructField("cost", DoubleType, true, Metadata.fromJson("{\"width\":4}"))
   ))
-  protected val fruitSchemaWithInvalidPositionMetadata = StructType(Seq(
-    StructField("val", IntegerType, true, Metadata.fromJson("{\"position\":3}")),
+
+  protected val fruitSchemaWithMetadataDecimalDigits = StructType(Seq(
+    StructField("val", IntegerType, true, Metadata.fromJson("{\"width\":3}")),
+    StructField("name", StringType, true, Metadata.fromJson("{\"width\":10}")),
+    StructField("avail", StringType, true, Metadata.fromJson("{\"width\":5}")),
+    StructField("cost", DoubleType, false, Metadata.fromJson("{\"width\":4, \"decimalDigits\":2}"))
+  ))
+
+  protected val fruitSchemaWithInvalidwidthMetadata = StructType(Seq(
+    StructField("val", IntegerType, true, Metadata.fromJson("{\"width\":3}")),
     StructField("name", StringType, true, Metadata.empty),
-    StructField("avail", StringType, true, Metadata.fromJson("{\"position\":5}")),
-    StructField("cost", DoubleType, true, Metadata.fromJson("{\"position\":4}"))
+    StructField("avail", StringType, true, Metadata.fromJson("{\"width\":5}")),
+    StructField("cost", DoubleType, true, Metadata.fromJson("{\"width\":4}"))
   ))
 
   val sqlContext: SQLContext = new SQLContext(new SparkContext("local[2]", "FixedwidthSuite"))
@@ -114,8 +122,14 @@ class FixedwidthSpec extends Specification with FixedwidthSetup {
       result.collect().length mustEqual malformedFruitSize
     }
 
-    "Parse with position defined in structfield metadata" in {
+    "Parse with width defined in structfield metadata" in {
       val result = sqlContext.fixedFileDefinedBySchema(fruit_resource(), fruitSchemaWithMetadata,
+        useHeader = false)
+      sanityChecks(result)
+    }
+
+    "Parse with width defined in structfield metadata and include decimal digits" in {
+      val result = sqlContext.fixedFileDefinedBySchema(fruit_resource("decimal"), fruitSchemaWithMetadataDecimalDigits,
         useHeader = false)
       sanityChecks(result)
     }
@@ -136,9 +150,9 @@ class FixedwidthSpec extends Specification with FixedwidthSetup {
       fail must throwA[SparkException]
     }
 
-    "FAIL to parse a fw file with invalid position contained on schema" in {
+    "FAIL to parse a fw file with invalid width contained on schema" in {
       def fail = {
-        sqlContext.fixedFileDefinedBySchema(fruit_resource(), fruitSchemaWithInvalidPositionMetadata, useHeader = false).collect()
+        sqlContext.fixedFileDefinedBySchema(fruit_resource(), fruitSchemaWithInvalidwidthMetadata, useHeader = false).collect()
       }
       fail must throwA[SparkException]
     }
