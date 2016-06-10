@@ -4,7 +4,9 @@ version := "1.0"
 
 organization := "com.quartethealth"
 
+lazy val credentialsPath = Path.userHome / ".sbt" / ".credentials"
 publishTo := Some("Artifactory Realm" at "http://repo.neogrid.com/libs-sbt-release")
+credentials += Credentials(credentialsPath)
 
 scalaVersion := "2.10.6"
 
