@@ -16,6 +16,7 @@ object MetadataFields {
     * Example: 001052 to 0010.52 with 2 decimal digits
     **/
   private def formatDecimalDigits(token: String, decimalDigits: Int): String = {
+    if(token == null || token == "") return token;
     val (integer, decimal) = token.splitAt(token.length - decimalDigits)
     integer + '.' + decimal
   }

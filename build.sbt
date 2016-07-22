@@ -1,6 +1,6 @@
 name := "spark-fixedwidth"
 
-version := "1.0"
+version := "1.1"
 
 organization := "com.quartethealth"
 
