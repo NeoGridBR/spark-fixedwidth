@@ -8,7 +8,7 @@ lazy val credentialsPath = Path.userHome / ".sbt" / ".credentials"
 publishTo := Some("Artifactory Realm" at "http://repo.neogrid.com/libs-sbt-release")
 credentials += Credentials(credentialsPath)
 
-scalaVersion := "2.10.6"
+scalaVersion := "2.11.12"
 
 libraryDependencies ++= Seq(
   "com.univocity" % "univocity-parsers" % "1.5.1",
