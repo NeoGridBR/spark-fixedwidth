@@ -15,7 +15,6 @@
  */
 package com.quartethealth.spark
 
-import com.quartethealth.spark.csv.CsvRelation
 import org.apache.commons.csv.CSVFormat
 import org.apache.hadoop.io.compress.CompressionCodec
 import org.apache.spark.sql.{DataFrame, SQLContext}

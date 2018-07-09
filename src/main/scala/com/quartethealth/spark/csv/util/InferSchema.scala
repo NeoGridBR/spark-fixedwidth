@@ -128,10 +128,7 @@ private[csv] object InferSchema {
     StringType
   }
 
-  /**
-   * Copied from internal Spark api
-   * [[org.apache.spark.sql.catalyst.analysis.HiveTypeCoercion]]
-   */
+
   private val numericPrecedence: IndexedSeq[DataType] =
     IndexedSeq[DataType](
       ByteType,
@@ -141,12 +138,9 @@ private[csv] object InferSchema {
       FloatType,
       DoubleType,
       TimestampType,
-      DecimalType.Unlimited)
+      DecimalType.SYSTEM_DEFAULT)
 
-  /**
-   * Copied from internal Spark api
-   * [[org.apache.spark.sql.catalyst.analysis.HiveTypeCoercion]]
-   */
+
   val findTightestCommonType: (DataType, DataType) => Option[DataType] = {
     case (t1, t2) if t1 == t2 => Some(t1)
     case (NullType, t1) => Some(t1)
